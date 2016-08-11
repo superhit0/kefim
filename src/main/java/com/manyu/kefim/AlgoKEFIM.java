@@ -184,32 +184,6 @@ public class AlgoKEFIM {
 			System.out.println();
        }
 
-		for (int i = 1; i < utilityBinArrayLU.length; i++)
-		{
-			if(topK.size()<k){
-				topK.add(new Itemset(i,utilityBinArrayLU[i]));
-			}else if(topK.size()==k){
-				if(this.minUtil==0){
-					this.minUtil=(int)(Collections.min(topK, new Comparator<Itemset>() {
-						@Override
-						public int compare(Itemset o1, Itemset o2) {
-							if(o1.getUtility()<o2.getUtility())
-								return -1;
-							else if(o1.getUtility()>o2.getUtility())
-								return 1;
-							else
-								return 0;
-						}
-					}).getUtility());
-				}else{
-				    if(this.minUtil<utilityBinArrayLU[i])
-				        this.minUtil=utilityBinArrayLU[i];
-                }
-			}
-		}
-		minUtil=this.minUtil;
-        topK.clear();
-
 	   	// Now, we keep only the promising items (those having a twu >= minutil)
 	   	List<Integer> itemsToKeep = new ArrayList<Integer>();
 	   	for(int j=1; j< utilityBinArrayLU.length;j++) {
