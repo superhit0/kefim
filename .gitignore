@@ -1,0 +1,8 @@
+/.idea
+*.iml
+*.jar
+.idea
+src/test/
+/src/test/
+src/test
+/src/test
