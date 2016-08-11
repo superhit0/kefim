@@ -55,6 +55,11 @@ public class Itemset {
 		itemset = new int[]{item};
 	}
 
+	public Itemset(int item, double utility){
+		itemset= new int[]{item};
+		this.utility=utility;
+	}
+
 	/**
 	 * Constructor 
 	 * @param items an array of items that should be added to the new itemset

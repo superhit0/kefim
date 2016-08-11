@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import com.manyu.kefim.*;
 
 //import ca.pfv.spmf.tools.MemoryLogger;
 
@@ -35,10 +36,12 @@ import java.util.List;
  *
  * @author Souleymane Zida, Philippe Fournier-Viger using some code by Alan Souza
  */
-public class AlgoEFIM {
+public class AlgoKEFIM {
 
 	/** the set of high-utility itemsets */
     private Itemsets highUtilityItemsets;
+	private List<Itemset> topK;
+    private int k;
     
 	/** object to write the output file */
 	BufferedWriter writer = null;
@@ -105,7 +108,7 @@ public class AlgoEFIM {
 	/** 
 	 * Constructor
 	 */
-    public AlgoEFIM() {
+    public AlgoKEFIM() {
          
     }
 
@@ -120,13 +123,15 @@ public class AlgoEFIM {
        * @return the itemsets or null if the user choose to save to file
      * @throws IOException if exception while reading/writing to file
      */
-    public Itemsets runAlgorithm(int minUtil, String inputPath, String outputPath, boolean activateTransactionMerging, int maximumTransactionCount, boolean activateSubtreeUtilityPruning) throws IOException {
+    public Itemsets runAlgorithm(int k,int minUtil, String inputPath, String outputPath, boolean activateTransactionMerging, int maximumTransactionCount, boolean activateSubtreeUtilityPruning) throws IOException {
     	
     	// reset variables for statistics
     	mergeCount=0;
     	transactionReadingCount=0;
 		timeIntersections = 0;
 		timeDatabaseReduction = 0;
+		this.topK=new ArrayList<Itemset>();
+        this.k=k;
     	
     	// save parameters about activating or not the optimizations
     	this.activateTransactionMerging = activateTransactionMerging;
@@ -178,6 +183,32 @@ public class AlgoEFIM {
 			}
 			System.out.println();
        }
+
+		for (int i = 1; i < utilityBinArrayLU.length; i++)
+		{
+			if(topK.size()<k){
+				topK.add(new Itemset(i,utilityBinArrayLU[i]));
+			}else if(topK.size()==k){
+				if(this.minUtil==0){
+					this.minUtil=(int)(Collections.min(topK, new Comparator<Itemset>() {
+						@Override
+						public int compare(Itemset o1, Itemset o2) {
+							if(o1.getUtility()<o2.getUtility())
+								return -1;
+							else if(o1.getUtility()>o2.getUtility())
+								return 1;
+							else
+								return 0;
+						}
+					}).getUtility());
+				}else{
+				    if(this.minUtil<utilityBinArrayLU[i])
+				        this.minUtil=utilityBinArrayLU[i];
+                }
+			}
+		}
+		minUtil=this.minUtil;
+        topK.clear();
 
 	   	// Now, we keep only the promising items (those having a twu >= minutil)
 	   	List<Integer> itemsToKeep = new ArrayList<Integer>();
@@ -372,6 +403,7 @@ public class AlgoEFIM {
 		
 		//close the output file
 		if(writer != null) {
+            writeOut();
 			writer.close();
 		}
 		
@@ -382,7 +414,24 @@ public class AlgoEFIM {
         return highUtilityItemsets;
     }
 
-	/**
+    private void writeOut() {
+        if(writer!=null){
+            try{
+                for(Itemset i:topK){
+                    for(int j=0;j<i.itemset.length;j++){
+                        writer.write(i.itemset[j]+" ");
+                    }
+                    writer.write("#UTIL: "+i.getUtility());
+                    writer.newLine();
+                    writer.flush();
+                }
+            }catch(IOException e){
+
+            }
+        }
+    }
+
+    /**
 	 * Implementation of Insertion sort for sorting a list of items by increasing order of TWU.
 	 * This has an average performance of O(n log n)
 	 * @param items list of integers to be sorted
@@ -848,22 +897,41 @@ public class AlgoEFIM {
 		} else {
 			// if user wants to save the results to file
 			// create a stringuffer
-			StringBuffer buffer = new StringBuffer();
-			// append each item from the itemset to the stringbuffer, separated by spaces
-			for (int i = 0; i <= tempPosition; i++) {
-				buffer.append(temp[i]);
-				if (i != tempPosition) {
-					buffer.append(' ');
-				}
-			}
-			// append the utility of the itemset
-			buffer.append(" #UTIL: ");
-			buffer.append(utility);
-			
-			// write the stringbuffer to file and create a new line
-			// so that we are ready for writing the next itemset.
-			writer.write(buffer.toString());
-			writer.newLine();
+//			StringBuffer buffer = new StringBuffer();
+//			// append each item from the itemset to the stringbuffer, separated by spaces
+//			for (int i = 0; i <= tempPosition; i++) {
+//				buffer.append(temp[i]);
+//				if (i != tempPosition) {
+//					buffer.append(' ');
+//				}
+//			}
+//			// append the utility of the itemset
+//			buffer.append(" #UTIL: ");
+//			buffer.append(utility);
+//
+//			// write the stringbuffer to file and create a new line
+//			// so that we are ready for writing the next itemset.
+//			writer.write(buffer.toString());
+//			writer.newLine();
+            if(utility>minUtil){
+                if(topK.size()<k){
+                    topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
+                    return;
+                }
+                topK.remove(Collections.min(topK, new Comparator<Itemset>() {
+                    @Override
+                    public int compare(Itemset o1, Itemset o2) {
+                        if(o1.getUtility()<o2.getUtility())
+                            return -1;
+                        else if(o1.getUtility()>o2.getUtility())
+                            return 1;
+                        else
+                            return 0;
+                    }
+                }));
+                topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
+                minUtil=utility;
+            }
 		}
     }
 
