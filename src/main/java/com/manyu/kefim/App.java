@@ -22,11 +22,11 @@ public class App
         options.addOption("tm", true, "set transaction merging");
         options.addOption("c", true, "get transaction count");
         options.addOption("sup", true, "set subtree utility pruning");
-        int k=20;
+        int k=100;
         String inputPath="mushroom.txt";
         String outputPath="abc.txt";
         boolean activateTransactionMerging=true;
-        int maximumTransactionCount=100;
+        int maximumTransactionCount=8124;
         boolean activateSubtreeUtilityPruning=true;
         try {
             commandLine=parser.parse(options,args);

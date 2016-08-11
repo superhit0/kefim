@@ -57,7 +57,7 @@ public class AlgoKEFIM {
 	int minUtil;
 	
 	/** if this variable is set to true, some debugging information will be shown */
-    final boolean  DEBUG = true;
+    final boolean  DEBUG = false;
 	
     /** The following variables are the utility-bins array 
 	// Recall that each bucket correspond to an item */
@@ -890,6 +890,8 @@ public class AlgoKEFIM {
             if(utility>minUtil){
                 if(topK.size()<k){
                     topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
+					if(minUtil==1)
+						minUtil=utility;
                     return;
                 }
                 topK.remove(Collections.min(topK, new Comparator<Itemset>() {
