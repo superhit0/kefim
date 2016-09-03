@@ -9,3 +9,4 @@ src/test
 *.txt
 src/main/resources/
 target/
+*~
