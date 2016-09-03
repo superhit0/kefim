@@ -10,9 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import com.manyu.kefim.*;
 
-//import ca.pfv.spmf.tools.MemoryLogger;
-
-
 /* This file is copyright (c) 2012-2015 Souleymane Zida & Philippe Fournier-Viger
 * 
 * This file is part of the SPMF DATA MINING SOFTWARE
@@ -160,7 +157,7 @@ public class AlgoKEFIM {
 		patternCount = 0;
 		
 		// reset the memory usage checking utility
-		//MemoryLogger.getInstance().reset();
+		MemoryLogger.getInstance().reset();
 		
 		// if in debug mode, show the initial database in the console
 		if(DEBUG)
@@ -382,7 +379,7 @@ public class AlgoKEFIM {
 		}
 		
 		// check the maximum memory usage
-		//MemoryLogger.getInstance().checkMemory();
+		MemoryLogger.getInstance().checkMemory();
         
 		// return the set of high-utility itemsets
         return highUtilityItemsets;
@@ -687,7 +684,7 @@ public class AlgoKEFIM {
 		}
 
 		// check the maximum memory usage for statistics purpose
-		//MemoryLogger.getInstance().checkMemory();
+		MemoryLogger.getInstance().checkMemory();
     }
 
 
@@ -939,7 +936,7 @@ public class AlgoKEFIM {
 					+ " ms");
 			System.out.println(" Time sort ~: " + timeSort	+ " ms");
 		}
-		//System.out.println(" Max memory:" + MemoryLogger.getInstance().getMaxMemory());
+		System.out.println(" Max memory:" + MemoryLogger.getInstance().getMaxMemory());
 		System.out.println(" Candidate count : "             + candidateCount);
 		System.out.println("=====================================");
 	}
