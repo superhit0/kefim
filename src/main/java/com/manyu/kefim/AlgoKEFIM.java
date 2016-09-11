@@ -35,11 +35,13 @@ import com.manyu.kefim.*;
  */
 public class AlgoKEFIM {
 
+	//MANYU
 	/** the set of high-utility itemsets */
     private Itemsets highUtilityItemsets;
 	private List<Itemset> topK;
     private int k;
-    
+    //MANYU
+
 	/** object to write the output file */
 	BufferedWriter writer = null;
 	
@@ -127,8 +129,10 @@ public class AlgoKEFIM {
     	transactionReadingCount=0;
 		timeIntersections = 0;
 		timeDatabaseReduction = 0;
+		//MANYU
 		this.topK=new ArrayList<Itemset>();
         this.k=k;
+		//MANYU
     	
     	// save parameters about activating or not the optimizations
     	this.activateTransactionMerging = activateTransactionMerging;
@@ -374,7 +378,9 @@ public class AlgoKEFIM {
 		
 		//close the output file
 		if(writer != null) {
+			//MANYU
             writeOut();
+			//MANYU
 			writer.close();
 		}
 		
@@ -385,6 +391,7 @@ public class AlgoKEFIM {
         return highUtilityItemsets;
     }
 
+    //MANYU
     private void writeOut() {
         if(writer!=null){
             try{
@@ -401,6 +408,7 @@ public class AlgoKEFIM {
             }
         }
     }
+    //MANYU
 
     /**
 	 * Implementation of Insertion sort for sorting a list of items by increasing order of TWU.
@@ -884,6 +892,8 @@ public class AlgoKEFIM {
 //			// so that we are ready for writing the next itemset.
 //			writer.write(buffer.toString());
 //			writer.newLine();
+
+			//MANYU
             if(utility>minUtil){
                 if(topK.size()<k){
                     topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
@@ -904,6 +914,7 @@ public class AlgoKEFIM {
                 }));
                 topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
                 minUtil=utility;
+				//MANYU
             }
 		}
     }
