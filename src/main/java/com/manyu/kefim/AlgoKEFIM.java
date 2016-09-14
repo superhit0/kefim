@@ -38,6 +38,7 @@ public class AlgoKEFIM {
 	//MANYU
 	/** the set of high-utility itemsets */
     private Itemsets highUtilityItemsets;
+	// Top-K itemsets
 	private List<Itemset> topK;
     private int k;
     //MANYU
@@ -392,6 +393,7 @@ public class AlgoKEFIM {
     }
 
     //MANYU
+	//Output Itemsets
     private void writeOut() {
         if(writer!=null){
             try{
@@ -894,13 +896,16 @@ public class AlgoKEFIM {
 //			writer.newLine();
 
 			//MANYU
+			//Execute if current item has utility > minutil
             if(utility>minUtil){
                 if(topK.size()<k){
+					//Add to topK if set doest not have k itemsets
                     topK.add(new Itemset(Arrays.copyOfRange(temp,0,tempPosition),utility));
 					if(minUtil==1)
 						minUtil=utility;
                     return;
                 }
+                //find minimum element from topK and replace it with current item
                 topK.remove(Collections.min(topK, new Comparator<Itemset>() {
                     @Override
                     public int compare(Itemset o1, Itemset o2) {
